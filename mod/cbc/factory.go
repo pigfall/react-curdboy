@@ -4,6 +4,11 @@ import(
 	ent "github.com/pigfall/ent_utils"
 )
 
+
+/*
+NewGenerator
+NewModelLayerGenerator
+*/
 type Factory struct{}
 
 func (Factory) NewGenerator(entSchemaPath,outputPath string)(*Generator,error){
@@ -16,10 +21,4 @@ func (Factory) NewGenerator(entSchemaPath,outputPath string)(*Generator,error){
 		entSchemaPath:entSchemaPath,
 		outputPath:outputPath,
 	},nil
-}
-
-func (Factory) NewModelGenerator(generator *Generator)*ModelGenerator{
-	return &ModelGenerator{
-		generator:generator,
-	}
 }

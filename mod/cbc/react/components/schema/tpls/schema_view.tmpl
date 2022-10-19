@@ -1,0 +1,41 @@
+{{$generator:=.}}
+{{$node:=$generator.EntNode}}
+
+import {
+  Table,
+  Thead,
+  Tbody,
+  Tfoot,
+  Tr,
+  Th,
+  Td,
+  TableCaption,
+  TableContainer,
+} from '@chakra-ui/react'
+
+function {{$generator.Generated_ComponentName}}(){
+  return (
+      <TableContainer>
+        <Table variant='simple'>
+          <TableCaption>{{$node.Name}}</TableCaption>
+          <Thead>
+            <Tr>
+              <Th>Field Name</Th>
+              <Th>Field Type</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {{range $node.Fields}}
+              {{$field:=.}}
+              <Tr>
+                <Td>{{$field.Name}}</Td>
+                <Td>{{$field.Type.String}}</Td>
+              </Tr>
+            {{end}}
+          </Tbody>
+        </Table>
+      </TableContainer>
+  )
+}
+
+export { {{$generator.Generated_ComponentName}} }

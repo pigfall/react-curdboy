@@ -1,0 +1,36 @@
+{{$generator:=.}}
+{{ $nodes:=$generator.Nodes}}
+
+import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
+
+{{range $nodes}}
+  {{$node:=.}}
+  import { {{$node.Name}} } from "../components/schemas/{{$node.Name}}"
+{{end}}
+
+function {{$generator.Generated_ComponentName}}(){
+return (
+      <Tabs> 
+        <TabList>
+          {{ range $nodes }}
+            <Tab>{{.Name}}</Tab>
+          {{ end }}
+        </TabList>
+
+        <TabPanels>
+          {{ range $nodes }}
+            {{$node:=.}}
+            <TabPanel>
+            <{{$node.Name}}/>
+            </TabPanel>
+          {{ end }}
+
+        </TabPanels>
+      </Tabs>
+)
+}
+
+
+export {
+  {{$generator.Generated_ComponentName}}
+}

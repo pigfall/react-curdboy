@@ -1,0 +1,25 @@
+{{- $rendererGenerator:= . -}}
+{{- $node:= .EntNode }}
+
+function {{ $rendererGenerator.Generated_RenderData_FuncName }}(model){
+  return (
+    {{ range $node.Fields }}
+      {{$field:=.}}
+      <div>{{$field.Name}}</div>
+    {{ end }}
+  )
+}
+
+function {{$rendererGenerator.Generated_RenderModel_FuncName}}(){
+  return(
+    {{ range $node.Fields }}
+      {{$field:=.}}
+      <div>{{$field.Name}}</div>
+    {{end}}
+  )
+}
+
+export {
+  {{ $rendererGenerator.Generated_RenderData_FuncName }}
+  {{ $rendererGenerator.Generated_RenderModel_FuncName }}
+}

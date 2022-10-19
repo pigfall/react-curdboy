@@ -1,13 +1,18 @@
 package cbc
 
 import(
-	"embed"
+	"log"
+
 	ent "github.com/pigfall/ent_utils"
+
+	"github.com/pigfall/react-curdboy/mod/cbc/react/app"
 )
 
+func init(){
+	log.SetFlags(log.Llongfile | log.LstdFlags)
+}
 
-//go:embed tpls/*
-var templates embed.FS
+
 
 type Generator struct{
 	graph *ent.Graph
@@ -16,12 +21,6 @@ type Generator struct{
 }
 
 func (g *Generator) Generate() error{
-	factory := Factory{}
-	if err :=factory.NewModelGenerator(g).Generate();err != nil{
-		return err
-	}
-
-
-
-	panic("TODO")
+	factory := app.Factory{}
+	return factory.SimpleAppGenerator(g.graph.GetNodes()).Generate(g.outputPath)
 }
