@@ -11,13 +11,15 @@ import {
   Td,
   TableCaption,
   TableContainer,
+  VStack,
 } from '@chakra-ui/react'
 
 function {{$generator.Generated_ComponentName}}(){
   return (
+  <VStack>
       <TableContainer>
         <Table variant='simple'>
-          <TableCaption>{{$node.Name}}</TableCaption>
+          <TableCaption>{{$node.Name}} Fields</TableCaption>
           <Thead>
             <Tr>
               <Th>Field Name</Th>
@@ -35,6 +37,27 @@ function {{$generator.Generated_ComponentName}}(){
           </Tbody>
         </Table>
       </TableContainer>
+      <TableContainer>
+        <Table variant='simple'>
+          <TableCaption>{{$node.Name}} Edges</TableCaption>
+          <Thead>
+            <Tr>
+              <Th>Edge Name</Th>
+              <Th>Edge Type</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {{range $node.Edges}}
+              {{$edge:=.}}
+              <Tr>
+                <Td>{{$edge.Name}}</Td>
+                <Td>{{$edge.Type.Name}}</Td>
+              </Tr>
+            {{end}}
+          </Tbody>
+        </Table>
+      </TableContainer>
+  </VStack>
   )
 }
 
