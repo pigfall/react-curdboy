@@ -1,6 +1,7 @@
 ent "github.com/pigfall/ent_utils"
 
 schema "github.com/pigfall/react-curdboy/mod/cbc/react/components/schema"
+"github.com/pigfall/react-curdboy/mod/cbc/react/components"
 
 iter "github.com/pigfall/goiter"
 

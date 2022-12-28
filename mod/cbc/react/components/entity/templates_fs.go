@@ -1,4 +1,4 @@
-package onepage
+package entity
 
 import (
 	"embed"

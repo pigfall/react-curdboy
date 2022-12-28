@@ -42,6 +42,7 @@ function {{$generator.Generated_ComponentName}}(){
           <TableCaption>{{$node.Name}} Edges</TableCaption>
           <Thead>
             <Tr>
+              <Th>Relation</Th>
               <Th>Edge Name</Th>
               <Th>Edge Type</Th>
             </Tr>
@@ -50,6 +51,7 @@ function {{$generator.Generated_ComponentName}}(){
             {{range $node.Edges}}
               {{$edge:=.}}
               <Tr>
+                <Td>{{$edge.Rel.Type.String}}</Td>
                 <Td>{{$edge.Name}}</Td>
                 <Td>{{$edge.Type.Name}}</Td>
               </Tr>
