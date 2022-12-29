@@ -1,12 +1,58 @@
 {{$generator:=.}}
 {{$node:=.EntNode}}
 
+import {
+  Button,
+  Table,
+  Thead,
+  Tbody,
+  Tfoot,
+  Tr,
+  Th,
+  Td,
+  TableCaption,
+  TableContainer,
+  VStack,
+} from '@chakra-ui/react'
+
+import{ useState, useEffect } from 'react';
 
 function {{$node.Name}}List(){
+  const [records, setRecords] = useState([])
+
   return (
-    <div>
-      TODO
-    </div>
+    <TableViewer records={records}/>
+  )
+}
+
+function TableViewer({records=[]}){
+  const recordItems = records.map(record=>
+    <Tr>
+        <Td>inches</Td>
+        <Td>millimetres (mm)</Td>
+        <Td isNumeric>{record}</Td>
+    </Tr>
+  )
+
+  return (
+    <TableContainer>
+      <Table>
+        <Thead>
+          <Tr>
+            {{$node.Fields}}
+            {{$field:=.}}
+            <Th></Th>
+            {{end}}
+          </Tr>
+        </Thead>
+
+        <Tbody>
+          {recordItems}
+        </Tbody>
+      </Table>
+      
+      
+    </TableContainer>
   )
 }
 

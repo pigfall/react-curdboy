@@ -9,6 +9,7 @@ import (
 	ent "github.com/pigfall/ent_utils"
 
 	onepage "github.com/pigfall/react-curdboy/mod/cbc/react/onepage"
+	"github.com/pigfall/react-curdboy/mod/cbc/react/api_client"
 )
 
 type SimpleAppGenerator struct {
@@ -52,6 +53,10 @@ func (g *SimpleAppGenerator) generateDependencies(outputDir string) error {
 	}
 
 	if err := factory.EntitiesViewerGenerator(g.nodes).Generate(outputDir); err != nil {
+		return err
+	}
+
+	if err:=(client.Factory{}).ClientGenerator(g.nodes).Generate(outputDir);err != nil{
 		return err
 	}
 

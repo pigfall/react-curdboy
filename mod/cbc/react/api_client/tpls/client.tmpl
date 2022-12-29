@@ -1,0 +1,27 @@
+{{$generator:=.}}
+{{$nodes:=$generator.Nodes}}
+class Client {
+  constructor(serverURL) {
+    this.serverURL = serverURL
+  }
+
+  {{range $nodes}}
+    {{$node:=.}}
+  {{$node.Name}}(){
+    return new {{$node.Name}}(this)
+  }
+  {{end}}
+}
+
+{{range $nodes}}
+  {{$node:=.}}
+class {{$node.Name}} {
+  constructor(client) {
+    this.client = client
+  }
+
+  create(obj){
+    return fetch(new Request(this.client.serverURL,{method:"POST",body:JSON.stringify(obj)}))
+  }
+}
+{{end}}
