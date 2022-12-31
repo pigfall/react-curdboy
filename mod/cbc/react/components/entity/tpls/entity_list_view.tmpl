@@ -36,7 +36,8 @@ function TableViewer({records=[]}){
 
   return (
   <>
-    <Button>Add a {{$node.Name}}</Button>
+  <Button onClick={()=>{}}>Add a {{$node.Name}}</Button>
+    <Form hidden={false}/>
     <TableContainer>
       <Table>
         <Thead>
@@ -56,6 +57,15 @@ function TableViewer({records=[]}){
       
     </TableContainer>
   </>
+  )
+}
+
+function Form({hidden}){
+  if (hidden){
+    return null
+  }
+  return (
+    <Button>TODO</Button>
   )
 }
 
