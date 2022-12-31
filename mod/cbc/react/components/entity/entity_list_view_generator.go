@@ -19,7 +19,7 @@ type EntityListViewGenerator struct {
 }
 
 func (g *EntityListViewGenerator) Generate(outputDirBase string) error {
-	tplIns, err := tpl.New("entity_list_view.tmpl").ParseFS(templates, "tpls/entity_list_view.tmpl")
+	tplIns, err := tpl.New("entity_list_view.go.tmpl").ParseFS(templates, "tpls/entity_list_view.go.tmpl")
 	if err != nil {
 		log.Println(err)
 		return err

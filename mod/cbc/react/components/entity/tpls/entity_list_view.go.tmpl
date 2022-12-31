@@ -13,6 +13,13 @@ import {
   TableCaption,
   TableContainer,
   VStack,
+  FormControl,
+  FormLabel,
+  Input,
+  Divider,
+  Text,
+  Center,
+  Box,
 } from '@chakra-ui/react'
 
 import{ useState, useEffect } from 'react';
@@ -20,12 +27,19 @@ import{ useState, useEffect } from 'react';
 function {{$node.Name}}List(){
   const [records, setRecords] = useState([])
 
+  useEffect(
+    ()=>{
+    },
+    [],
+  )
+
   return (
     <TableViewer records={records}/>
   )
 }
 
 function TableViewer({records=[]}){
+  const [hideForm,setHideForm] = useState(true)
   const recordItems = records.map(record=>
     <Tr>
         {{range $node.Fields}}
@@ -36,8 +50,17 @@ function TableViewer({records=[]}){
 
   return (
   <>
-  <Button onClick={()=>{}}>Add a {{$node.Name}}</Button>
-    <Form hidden={false}/>
+    <Button onClick={()=>{setHideForm(!hideForm)}}>Add a {{$node.Name}}</Button>
+    <Form hidden={hideForm}/>
+
+    <Divider />
+
+    <Box mt='10'>
+      <Center>
+        <Text>{{$node.Name}} List</Text>
+      </Center>
+    </Box>
+
     <TableContainer>
       <Table>
         <Thead>
@@ -65,7 +88,14 @@ function Form({hidden}){
     return null
   }
   return (
-    <Button>TODO</Button>
+      <>
+      {{range $node.Fields}}
+      {{$field:=.}}
+      <FormLabel>{{$field.Name}}</FormLabel>
+      <Input />
+      {{end}}
+      <Button>Submit</Button>
+      </>
   )
 }
 
