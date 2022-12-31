@@ -1,13 +1,15 @@
 {{$generator:=.}}
 {{$nodes:=$generator.Nodes}}
 
-import { Tabs, TabList, TabPanels, Tab, TabPanel, Button } from '@chakra-ui/react';
+import { Tabs, TabList, TabPanels, Tab, TabPanel, Button, Input } from '@chakra-ui/react';
+import {useState} from 'react';
 {{range $nodes}}
   {{$node:=.}}
   import { {{$node.Name}}List } from "../components/entities/{{$node.Name}}List"
 {{end}}
 
 function Entities(){
+  const [expandForm, setExpandForm] = useState(false)
   return (
       <Tabs> 
         <TabList>
@@ -20,13 +22,24 @@ function Entities(){
           {{ range $nodes }}
             {{$node:=.}}
             <TabPanel>
-            <Button />
             <{{$node.Name}}List/>
             </TabPanel>
           {{ end }}
 
         </TabPanels>
       </Tabs>
+  )
+}
+
+function Form({expand}){
+  if (!expand){
+    return null;
+  }
+  return(
+  <>
+    <Input placeholder='name'/>
+    <Button>Submit</Button>
+  </>
   )
 }
 

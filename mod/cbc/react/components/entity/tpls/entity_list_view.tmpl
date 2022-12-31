@@ -28,20 +28,22 @@ function {{$node.Name}}List(){
 function TableViewer({records=[]}){
   const recordItems = records.map(record=>
     <Tr>
-        <Td>inches</Td>
-        <Td>millimetres (mm)</Td>
-        <Td isNumeric>{record}</Td>
+        {{range $node.Fields}}
+          <Td>record["{{.Name}}"]</Td>
+        {{end}}
     </Tr>
   )
 
   return (
+  <>
+    <Button>Add a {{$node.Name}}</Button>
     <TableContainer>
       <Table>
         <Thead>
           <Tr>
-            {{$node.Fields}}
+            {{range $node.Fields}}
             {{$field:=.}}
-            <Th></Th>
+            <Th>{{$field.Name}}</Th>
             {{end}}
           </Tr>
         </Thead>
@@ -53,6 +55,7 @@ function TableViewer({records=[]}){
       
       
     </TableContainer>
+  </>
   )
 }
 
