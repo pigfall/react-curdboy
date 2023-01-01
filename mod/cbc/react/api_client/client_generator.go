@@ -14,7 +14,7 @@ type ClientGenerator struct{
 }
 
 func (g *ClientGenerator) Generate(outputDir string)error{
-	tplIns, err := tpl.New("client.tmpl").ParseFS(templates, "tpls/client.tmpl")
+	tplIns, err := tpl.New("client.go.tmpl").ParseFS(templates, "tpls/client.go.tmpl")
 	if err != nil {
 		log.Println(err)
 		return err

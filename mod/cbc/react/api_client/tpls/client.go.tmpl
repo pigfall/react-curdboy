@@ -1,7 +1,10 @@
 {{$generator:=.}}
 {{$nodes:=$generator.Nodes}}
-class Client {
-  constructor(serverURL) {
+
+import {Config} from "Config";
+
+export class Client {
+  constructor(serverURL=Config.serverURL) {
     this.serverURL = serverURL
   }
 
@@ -22,6 +25,13 @@ class {{$node.Name}} {
 
   create(obj){
     return fetch(new Request(this.client.serverURL,{method:"POST",body:JSON.stringify(obj)}))
+  }
+
+  list(req){
+    var url = new URL(this.client.serverURL)
+    url.pathname = "/"+"{{$node.Name}}".toLowerCase()
+    url.search = new URLSearchParams(req).toString()
+    return fetch(new Request(url,{method:"GET",mode:'no-cors'}))
   }
 }
 {{end}}
