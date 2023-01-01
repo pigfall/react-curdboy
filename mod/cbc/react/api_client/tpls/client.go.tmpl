@@ -36,8 +36,11 @@ class {{$node.Name}} {
         url,
         {
           method:"POST",
-          mode:'no-cors',
-          body:JSON.stringify(obj)
+          body:JSON.stringify(obj),
+          mode: 'cors',
+          headers: {
+            'Content-Type': 'application/json'
+          },
         }
       )
     )
@@ -46,7 +49,7 @@ class {{$node.Name}} {
   list(req){
     var url = this.build_url()
     url.search = new URLSearchParams(req).toString()
-    return fetch(new Request(url,{method:"GET",mode:'no-cors'}))
+    return fetch(new Request(url,{method:"GET"}))
   }
 }
 {{end}}

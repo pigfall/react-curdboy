@@ -40,15 +40,19 @@ function {{$node.Name}}List(){
       setLoading(true);
       (new Client()).{{$node.Name}}().list({page:0}).
         then((data)=>{
-         setLoading(false)
-         dataLoaded(
-          {
-            title: 'Data loaded',
-            status: 'success',
-            duration: 2000,
-            isClosable: true,
-          }
-         )
+          return data.json()
+        })
+        .then((jsonBytes)=>{
+          console.log(jsonBytes)
+          setLoading(false)
+          dataLoaded(
+            {
+              title: 'Data loaded',
+              status: 'success',
+              duration: 2000,
+              isClosable: true,
+            }
+          )
         });
     },
     [],
@@ -119,6 +123,8 @@ function TableViewer({records=[]}){
 }
 
 function AddForm({hidden}){
+  const toast = useToast()
+
   if (hidden){
     return null
   }
@@ -132,6 +138,32 @@ function AddForm({hidden}){
       (values,actions)=>{
         console.log(values);
         (new Client()).{{$node.Name}}().create(values)
+          .then((res)=>{
+            if (!res.ok){
+              res.text().then((message)=>{
+                toast(
+                  {
+                    title: 'create error',
+                    description: `status: ${res.status}, message: ${message}`,
+                    status: 'error',
+                    duration: 2000,
+                    isClosable: true,
+                  }
+                )
+              })
+            }
+          })
+          .catch((err)=>{
+          console.log(err)
+          toast(
+            {
+              title: 'create error',
+              status: 'error',
+              duration: 2000,
+              isClosable: true,
+            }
+          )
+          })
           .finally(()=>{actions.setSubmitting(false)})
       }
     }
