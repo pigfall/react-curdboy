@@ -24,18 +24,32 @@ import {
   AlertIcon,
 } from '@chakra-ui/react'
 
+import { Field, Form , Formik } from 'formik';
 import{ useState, useEffect } from 'react';
 import {Client} from "cdb/client/Client";
 import {Config} from "Config";
+import { useToast } from '@chakra-ui/react'
 
 function {{$node.Name}}List(){
   const [records, setRecords] = useState([])
   const [loading, setLoading] = useState(false)
+  const dataLoaded = useToast()
 
   useEffect(
     ()=>{
       setLoading(true);
-      (new Client()).{{$node.Name}}().list({page:0}).then((data)=>{setLoading(false)});
+      (new Client()).{{$node.Name}}().list({page:0}).
+        then((data)=>{
+         setLoading(false)
+         dataLoaded(
+          {
+            title: 'Data loaded',
+            status: 'success',
+            duration: 2000,
+            isClosable: true,
+          }
+         )
+        });
     },
     [],
   )
@@ -43,13 +57,18 @@ function {{$node.Name}}List(){
   return (
     <>
     <TableViewer records={records}/>
-    {loading ? 
-    (<Alert status='warning'>
-    <AlertIcon />
-    Loading data... 
-    </Alert>) :
-       null
+
+    {
+      loading ? 
+      (
+        <Alert status='warning'>
+          <AlertIcon />
+          Loading data... 
+        </Alert>
+      ) :
+      null
     }
+
     </>
   )
 }
@@ -67,7 +86,7 @@ function TableViewer({records=[]}){
   return (
   <>
     <Button onClick={()=>{setHideForm(!hideForm)}}>Add a {{$node.Name}}</Button>
-    <Form hidden={hideForm}/>
+    <AddForm hidden={hideForm}/>
 
     <Divider />
 
@@ -99,25 +118,66 @@ function TableViewer({records=[]}){
   )
 }
 
-function Form({hidden}){
+function AddForm({hidden}){
   if (hidden){
     return null
   }
   return (
-      <>
-      {{range $node.Fields}}
-      {{$field:=.}}
-      <FormLabel>{{$field.Name}}</FormLabel>
-      <Input />
-      {{end}}
-      <Button onClick={()=>{
+<>
+  <Formik
+    initialValues={
+      {{template "formInitialValue" $node}}
+    }
+    onSubmit={
+      (values,actions)=>{
+        console.log(values);
+        (new Client()).{{$node.Name}}().create(values)
+          .finally(()=>{actions.setSubmitting(false)})
+      }
+    }
+  >
+  {
+    (props)=>{
+      return (<Form>
 
-      }}>
+        {{range $node.Fields}}
+        {{$field:=.}}
+        <Field name='{{$field.Name}}' >
+            {({ field, form }) => (
+              <FormControl >
+                <FormLabel>{{$field.Name}}</FormLabel>
+                <Input {...field} placeholder='{{$field.Name}}' />
+              </FormControl>
+            )}
+        </Field>
+        {{end}}
+
+        <Button
+        mt={4}
+        colorScheme='teal'
+        isLoading={props.isSubmitting}
+        type='submit'
+        >
         Submit
-      </Button>
-      </>
+        </Button>
+      </Form>
+      )
+    }
+  }
+  </Formik>
+</>
   )
 }
+
+{{ define "formInitialValue" }}
+  {{$node:=.}}
+  {
+    {{range $node.Fields}}
+    {{$field:=.}}
+    {{$field.Name}} : "",
+    {{end}}
+  }
+{{end}}
 
 export{
   {{$node.Name}}List

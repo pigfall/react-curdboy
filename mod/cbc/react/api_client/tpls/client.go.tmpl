@@ -23,13 +23,28 @@ class {{$node.Name}} {
     this.client = client
   }
 
+  build_url(){
+    var url = new URL(this.client.serverURL)
+    url.pathname = "/"+"{{$node.Name}}".toLowerCase()
+    return url
+  }
+
   create(obj){
-    return fetch(new Request(this.client.serverURL,{method:"POST",body:JSON.stringify(obj)}))
+    var url = this.build_url()
+    return fetch(
+      new Request(
+        url,
+        {
+          method:"POST",
+          mode:'no-cors',
+          body:JSON.stringify(obj)
+        }
+      )
+    )
   }
 
   list(req){
-    var url = new URL(this.client.serverURL)
-    url.pathname = "/"+"{{$node.Name}}".toLowerCase()
+    var url = this.build_url()
     url.search = new URLSearchParams(req).toString()
     return fetch(new Request(url,{method:"GET",mode:'no-cors'}))
   }
