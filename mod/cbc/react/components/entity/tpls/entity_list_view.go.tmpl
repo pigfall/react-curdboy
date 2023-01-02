@@ -13,6 +13,7 @@ import {
   TableCaption,
   TableContainer,
   VStack,
+  HStack,
   FormControl,
   FormLabel,
   Input,
@@ -32,18 +33,25 @@ import { useToast } from '@chakra-ui/react'
 
 function {{$node.Name}}List(){
   const [records, setRecords] = useState([])
+  const [page, setPage] = useState(0)
+  const [pageNum, setPageNum] = useState(1)
   const [loading, setLoading] = useState(false)
   const dataLoaded = useToast()
 
-  useEffect(
-    ()=>{
+  const pageSize = 3
+
+  function refreshList({page=0}){
       setLoading(true);
-      (new Client()).{{$node.Name}}().list({page:0}).
-        then((data)=>{
-          return data.json()
+      (new Client()).{{$node.Name}}().list({page_index:page, page_size:pageSize}).
+        then((res)=>{
+          return res.json()
         })
-        .then((jsonBytes)=>{
-          console.log(jsonBytes)
+        .then((resEntity)=>{
+          console.log(resEntity)
+          setRecords(resEntity.data)
+          setPage(page)
+          var pageNum = resEntity.meta.count / pageSize
+          setPageNum(pageNum > 0 ? pageNum : 1)
           setLoading(false)
           dataLoaded(
             {
@@ -54,13 +62,18 @@ function {{$node.Name}}List(){
             }
           )
         });
+  }
+
+  useEffect(
+    ()=>{
+      refreshList(0)
     },
     [],
   )
 
   return (
     <>
-    <TableViewer records={records}/>
+    <TableViewer records={records} refreshList={refreshList}/>
 
     {
       loading ? 
@@ -73,16 +86,32 @@ function {{$node.Name}}List(){
       null
     }
 
+    <PageViewer pageIndex={page} pageNum={pageNum} pageSize={pageSize} jumpToPage={refreshList}/>
+
     </>
   )
 }
 
-function TableViewer({records=[]}){
+function PageViewer({pageIndex, pageNum, pageSize, jumpToPage}){
+console.log(pageNum)
+  return (
+    <HStack>
+      <Box><Button onClick={()=>{jumpToPage({page:0})}}>First Page</Button></Box>
+      <Box>{pageIndex+1}</Box>
+      <Box><Button onClick={()=>{jumpToPage({page:pageNum-1})}}>Last Page</Button></Box>
+      <Box>Total Page: {pageNum}</Box>
+      <Box>Page Size: {pageSize}</Box>
+    </HStack>
+  )
+
+}
+
+function TableViewer({records=[],refreshList}){
   const [hideForm,setHideForm] = useState(true)
   const recordItems = records.map(record=>
-    <Tr>
+    <Tr key={record.id}>
         {{range $node.Fields}}
-          <Td>record["{{.Name}}"]</Td>
+          <Td>{record["{{.Name}}"]}</Td>
         {{end}}
     </Tr>
   )
@@ -90,7 +119,7 @@ function TableViewer({records=[]}){
   return (
   <>
     <Button onClick={()=>{setHideForm(!hideForm)}}>Add a {{$node.Name}}</Button>
-    <AddForm hidden={hideForm}/>
+    <AddForm hidden={hideForm} refreshList={refreshList}/>
 
     <Divider />
 
@@ -122,7 +151,7 @@ function TableViewer({records=[]}){
   )
 }
 
-function AddForm({hidden}){
+function AddForm({hidden,refreshList}){
   const toast = useToast()
 
   if (hidden){
@@ -164,7 +193,10 @@ function AddForm({hidden}){
             }
           )
           })
-          .finally(()=>{actions.setSubmitting(false)})
+          .finally(()=>{
+            refreshList(0)
+            actions.setSubmitting(false)
+          })
       }
     }
   >
